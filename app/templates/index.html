@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h3 class="mb-4">Panou General Flotă</h3>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card bg-secondary bg-opacity-25 p-3"><h6>Total Autovehicule</h6><h2>{{ total_auto }}</h2></div></div>
+  <div class="col-md-4"><div class="card bg-secondary bg-opacity-25 p-3"><h6>Șoferi Activi</h6><h2>{{ total_soferi }}</h2></div></div>
+  <div class="col-md-4"><div class="card bg-secondary bg-opacity-25 p-3"><h6>Ture Înregistrate</h6><h2>{{ total_ture }}</h2></div></div>
+</div>
+
+<h5 class="text-warning">Documente Expirate / Scadente (View: v_documente_scadente)</h5>
+<table class="table table-dark table-striped table-bordered">
+  <thead><tr><th>Tip</th><th>Categorie</th><th>Titular</th><th>Nr. Doc</th><th>Expiră la</th><th>Zile rămase</th><th>Status</th></tr></thead>
+  <tbody>
+    {% for d in scadente %}
+    <tr>
+      <td>{{ d.tip_document }}</td><td>{{ d.categorie }}</td><td>{{ d.titular }}</td>
+      <td>{{ d.numar_document }}</td><td>{{ d.data_expirarii }}</td><td>{{ d.zile_ramase }}</td>
+      <td><span class="badge bg-danger">{{ d.status_valabilitate }}</span></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

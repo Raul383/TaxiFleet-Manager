@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Gestiune Autovehicule (CRUD)</h3>
+<form method="POST" class="row g-2 bg-black p-3 rounded border border-secondary mb-4">
+  <input type="hidden" name="action" value="create">
+  <div class="col-md-2"><input name="nr_inmatriculare" class="form-control" placeholder="MM-20-TAX" required></div>
+  <div class="col-md-2"><input name="serie_sasiu" class="form-control" placeholder="Serie șasiu (17)" maxlength="17" required></div>
+  <div class="col-md-2"><input name="marca" class="form-control" placeholder="Marcă" required></div>
+  <div class="col-md-2"><input name="model" class="form-control" placeholder="Model" required></div>
+  <div class="col-md-1"><input name="an_fabricatie" type="number" class="form-control" value="2022" required></div>
+  <div class="col-md-1"><input name="km_curenti" type="number" class="form-control" value="0" required></div>
+  <div class="col-md-2">
+    <select name="id_plan" class="form-select">
+      {% for p in planuri %}<option value="{{ p.id_plan }}">{{ p.denumire }}</option>{% endfor %}
+    </select>
+  </div>
+  <input type="hidden" name="status" value="Disponibila">
+  <div class="col-12 mt-2"><button class="btn btn-warning btn-sm">Adaugă Autovehicul</button></div>
+</form>
+
+<table class="table table-dark table-bordered align-middle">
+  <thead><tr><th>ID</th><th>Nr. Înmatr.</th><th>Vehicul</th><th>An</th><th>Plan</th><th>Km Curenți</th><th>Status</th><th>Acțiuni</th></tr></thead>
+  <tbody>
+    {% for a in lista %}
+    <tr>
+      <td>{{ a.id_vehicul }}</td><td class="fw-bold">{{ a.nr_inmatriculare }}</td>
+      <td>{{ a.marca }} {{ a.model }}</td><td>{{ a.an_fabricatie }}</td><td>{{ a.plan_nume }}</td>
+      <td>
+        <form method="POST" class="d-flex gap-1">
+          <input type="hidden" name="action" value="update">
+          <input type="hidden" name="id_vehicul" value="{{ a.id_vehicul }}">
+          <input type="hidden" name="id_plan" value="{{ a.id_plan }}">
+          <input type="number" name="km_curenti" value="{{ a.km_curenti }}" class="form-control form-control-sm" style="width:100px">
+          <select name="status" class="form-select form-select-sm" style="width:140px">
+            {% for st in ['Disponibila','In Tura','In Service','Retrasa din circulatie'] %}
+              <option value="{{ st }}" {% if a.status == st %}selected{% endif %}>{{ st }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-outline-info btn-sm">Salvează</button>
+        </form>
+      </td>
+      <td>{{ a.status }}</td>
+      <td>
+        <form method="POST">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="id_vehicul" value="{{ a.id_vehicul }}">
+          <button class="btn btn-outline-danger btn-sm">Șterge</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

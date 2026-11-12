@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Atribuiri Titulari (Relație M:N Șoferi ↔ Autovehicule)</h3>
+<form method="POST" class="row g-2 bg-black p-3 rounded border border-secondary mb-4">
+  <input type="hidden" name="action" value="create">
+  <div class="col-md-4">
+    <select name="id_vehicul" class="form-select">
+      {% for m in masini %}<option value="{{ m.id_vehicul }}">{{ m.nr_inmatriculare }} - {{ m.marca }} {{ m.model }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-4">
+    <select name="id_sofer" class="form-select">
+      {% for s in soferi %}<option value="{{ s.id_sofer }}">{{ s.nume }} {{ s.prenume }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><input type="date" name="data_inceput" class="form-control" required></div>
+  <div class="col-md-2"><button class="btn btn-warning w-100">Atribuie</button></div>
+</form>
+
+<table class="table table-dark table-bordered">
+  <thead><tr><th>ID</th><th>Autovehicul</th><th>Șofer Titular</th><th>Data Început</th><th>Data Sfârșit</th><th>Acțiuni</th></tr></thead>
+  <tbody>
+    {% for a in lista %}
+    <tr>
+      <td>{{ a.id_atribuire }}</td><td>{{ a.nr_inmatriculare }} ({{ a.marca }})</td><td>{{ a.sofer_nume }}</td>
+      <td>{{ a.data_inceput }}</td><td>{{ a.data_sfarsit or 'Activă' }}</td>
+      <td class="d-flex gap-1">
+        {% if not a.data_sfarsit %}
+        <form method="POST">
+          <input type="hidden" name="action" value="close">
+          <input type="hidden" name="id_atribuire" value="{{ a.id_atribuire }}">
+          <button class="btn btn-outline-warning btn-sm">Încheie azi</button>
+        </form>
+        {% endif %}
+        <form method="POST">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="id_atribuire" value="{{ a.id_atribuire }}">
+          <button class="btn btn-outline-danger btn-sm">Șterge</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

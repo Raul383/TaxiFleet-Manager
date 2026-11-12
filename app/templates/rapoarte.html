@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Execuție Live — Cele 20 de Interogări SQL</h3>
+<form method="POST" class="row g-2 bg-black p-3 rounded border border-secondary mb-4">
+  <div class="col-md-10">
+    <select name="query_file" class="form-select">
+      {% for q in query_list %}
+        <option value="{{ q.file }}" {% if selected_query and q.file == selected_query.file %}selected{% endif %}>
+          [{{ q.file }}] {{ q.title }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><button class="btn btn-info w-100 fw-bold">Rulează SQL</button></div>
+</form>
+
+{% if selected_query %}
+<div class="mb-3">
+  <label class="text-secondary small">Cod SQL executat:</label>
+  <pre class="bg-black text-warning p-3 rounded border border-secondary">{{ selected_query.sql }}</pre>
+</div>
+{% endif %}
+
+{% if rows %}
+<div class="table-responsive">
+  <table class="table table-dark table-striped table-bordered">
+    <thead><tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr></thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>{% for col in columns %}<td>{{ r[col] }}</td>{% endfor %}</tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% elif affected is none and request.method == 'POST' %}
+  <div class="alert alert-secondary">Interogarea a returnat 0 rânduri.</div>
+{% endif %}
+{% endblock %}

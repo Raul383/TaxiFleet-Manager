@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Gestiune Șoferi (CRUD)</h3>
+<form method="POST" class="row g-2 bg-black p-3 rounded border border-secondary mb-4">
+  <input type="hidden" name="action" value="create">
+  <div class="col-md-2"><input name="nume" class="form-control" placeholder="Nume" required></div>
+  <div class="col-md-2"><input name="prenume" class="form-control" placeholder="Prenume" required></div>
+  <div class="col-md-2"><input name="cnp" class="form-control" placeholder="CNP (13 cifre)" required></div>
+  <div class="col-md-2"><input name="telefon" class="form-control" placeholder="Telefon" required></div>
+  <div class="col-md-3"><input name="adresa" class="form-control" placeholder="Adresă"></div>
+  <div class="col-md-1"><button class="btn btn-warning w-100">Adaugă</button></div>
+</form>
+
+<table class="table table-dark table-bordered align-middle">
+  <thead><tr><th>ID</th><th>Nume Complet</th><th>CNP</th><th>Cont</th><th>Telefon / Adresă / Activ</th><th>Ștergere</th></tr></thead>
+  <tbody>
+    {% for s in lista %}
+    <tr>
+      <td>{{ s.id_sofer }}</td><td class="fw-bold">{{ s.nume }} {{ s.prenume }}</td>
+      <td>{{ s.cnp }}</td><td>{{ s.nume_utilizator }}</td>
+      <td>
+        <form method="POST" class="d-flex gap-1">
+          <input type="hidden" name="action" value="update">
+          <input type="hidden" name="id_sofer" value="{{ s.id_sofer }}">
+          <input name="telefon" value="{{ s.telefon }}" class="form-control form-control-sm" style="width:120px">
+          <input name="adresa" value="{{ s.adresa or '' }}" class="form-control form-control-sm">
+          <select name="status_activ" class="form-select form-select-sm" style="width:100px">
+            <option value="1" {% if s.status_activ %}selected{% endif %}>Activ</option>
+            <option value="0" {% if not s.status_activ %}selected{% endif %}>Inactiv</option>
+          </select>
+          <button class="btn btn-outline-info btn-sm">Update</button>
+        </form>
+      </td>
+      <td>
+        <form method="POST">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="id_sofer" value="{{ s.id_sofer }}">
+          <button class="btn btn-outline-danger btn-sm">Șterge</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

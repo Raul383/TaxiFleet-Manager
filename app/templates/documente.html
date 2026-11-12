@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Documente Flotă & Șoferi (Testare Constrângere XOR)</h3>
+<p class="text-secondary small">Alege FIE o mașină, FIE un șofer. Dacă le selectezi pe ambele sau niciunul, baza de date respinge inserarea (RB4).</p>
+<form method="POST" class="row g-2 bg-black p-3 rounded border border-secondary mb-4">
+  <input type="hidden" name="action" value="create">
+  <div class="col-md-2">
+    <select name="id_tip" class="form-select">
+      {% for t in tipuri %}<option value="{{ t.id_tip }}">{{ t.denumire }} ({{ t.categorie }})</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="id_vehicul" class="form-select">
+      <option value="">-- Fără mașină --</option>
+      {% for m in masini %}<option value="{{ m.id_vehicul }}">{{ m.nr_inmatriculare }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select name="id_sofer" class="form-select">
+      <option value="">-- Fără șofer --</option>
+      {% for s in soferi %}<option value="{{ s.id_sofer }}">{{ s.nume }} {{ s.prenume }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><input name="numar_document" class="form-control" placeholder="Serie/Nr"></div>
+  <div class="col-md-2"><input name="data_emiterii" type="date" class="form-control" required></div>
+  <div class="col-md-2"><input name="data_expirarii" type="date" class="form-control"></div>
+  <div class="col-12 mt-2"><button class="btn btn-warning btn-sm">Înregistrează Document</button></div>
+</form>
+
+<table class="table table-dark table-bordered">
+  <thead><tr><th>ID</th><th>Tip</th><th>Titular (XOR)</th><th>Serie</th><th>Emis</th><th>Expiră</th><th>Acțiuni</th></tr></thead>
+  <tbody>
+    {% for d in lista %}
+    <tr>
+      <td>{{ d.id_document }}</td><td>{{ d.tip_nume }}</td>
+      <td>{{ d.nr_inmatriculare or d.sofer_nume }}</td>
+      <td>{{ d.numar_document or '-' }}</td><td>{{ d.data_emiterii }}</td><td>{{ d.data_expirarii or 'Permanent' }}</td>
+      <td>
+        <form method="POST">
+          <input type="hidden" name="action" value="delete">
+          <input type="hidden" name="id_document" value="{{ d.id_document }}">
+          <button class="btn btn-outline-danger btn-sm">Șterge</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
